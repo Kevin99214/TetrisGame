@@ -73,6 +73,7 @@ public class Group : MonoBehaviour
             float distanceLeft = findDistanceToBlock(true /* true = x-axis*/, false /* false = left*/);
             float distanceRight = findDistanceToBlock(true /* true = x-axis*/, true /* true = right*/);
 
+            //check both left and right for valid position
             if (!inBoard() || !isValidPosition(distanceLeft) || !isValidPosition(distanceRight))
             {
                 transform.Rotate(0, 0, ROTATE_ANGLE);
@@ -87,6 +88,7 @@ public class Group : MonoBehaviour
             float distanceLeft = findDistanceToBlock(true /* true = x-axis*/, false /* false = left*/);
             float distanceRight = findDistanceToBlock(true /* true = x-axis*/, true /* true = right*/);
 
+            //check both left and right for valid position
             if (!inBoard() || !isValidPosition(distanceLeft) || !isValidPosition(distanceRight))
             {
                 transform.Rotate(0, 0, -ROTATE_ANGLE);
