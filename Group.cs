@@ -496,9 +496,21 @@ public class Group : MonoBehaviour
         if (hit.collider != null)
             distance = hit.distance;
 
+        //check if the gap is within the leeway for slamming
         if (((averagePosition - sideBlockSize / 2) > (position.y - minY - LEEWAY))
                 && ((averagePosition + sideBlockSize / 2) < (position.y + maxY + LEEWAY)))
         {
+            //if top is above gap but within leeway, adjust y to fit into gap
+            if((averagePosition - sideBlockSize / 2) < (position.y - minY))
+            {
+                transform.position -= new Vector3(0, (averagePosition + sideBlockSize / 2) - (position.y + maxY), 0);
+            }
+            //if bottom is below gap but within leeway, adjust y to fit into gap
+            else if((averagePosition + sideBlockSize / 2) > (position.y + maxY))
+            {
+                transform.position += new Vector3(0, (position.y - minY) - (averagePosition - sideBlockSize / 2), 0);
+            }
+
             if (right)
                 transform.position += new Vector3(distance, 0, 0);
             else
