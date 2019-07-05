@@ -15,6 +15,7 @@ public class createShape : MonoBehaviour
     private GameObject shape;
     private BoxCollider2D[] colliders;
     private Rigidbody2D rb;
+    private int prevShape = -1;
 
 
     // Start is called before the first frame update
@@ -31,13 +32,19 @@ public class createShape : MonoBehaviour
 
     public void createNewObject()
     {
-        //create a random shape
+        //create a random number
         int shapeNum = Random.Range(0, NUM_OF_SHAPES);
+        //make sure a different shape is generated everytime
+        while (prevShape == shapeNum)
+            shapeNum = Random.Range(0, NUM_OF_SHAPES);
+        //assign prevShape 
+        prevShape = shapeNum;
+        //get location of where to spawn shape
         float yPos = (GameBoard.Height > 0) ? (STARTING_HEIGHT + GameBoard.Height) : STARTING_HEIGHT;
+        //create the shape
         shape = Instantiate(shapePrefabs[shapeNum],
                             new Vector3(0, yPos, 0),
                             Quaternion.identity);
-
 
         //get shape's rigidbody
         rb = shape.GetComponent<Rigidbody2D>();

@@ -169,7 +169,7 @@ public class Group : MonoBehaviour
             //get distance from current block to blocks below
             float distance = findDistanceToBlock(false /* false = y-axis*/, false /* false = down*/);
             //slam piece to position right before next block
-            transform.position -= new Vector3(0, distance - 0.05f, 0);
+            transform.position -= new Vector3(0, distance - 0.025f, 0);
 
         }
 
@@ -392,13 +392,27 @@ public class Group : MonoBehaviour
 
                 //found child object with lowest distance
                 if (hit.collider != null)
-                    if ((hit.distance > distance) && (hit.rigidbody != rb))
+                    if (hit.rigidbody != rb)
                     {
-                        distance = hit.distance;
-                        if (right)
-                            position = new Vector2(child.position.x + 0.35f, child.position.y + i);
-                        else
-                            position = new Vector2(child.position.x - 0.35f, child.position.y + i);
+                        //if distance is larger
+                        if ((hit.distance > distance))
+                        {
+                            distance = hit.distance;
+                            //get position of child that had farthest distance
+                            if (right)
+                                position = new Vector2(child.position.x + 0.35f, child.position.y + i);
+                            else
+                                position = new Vector2(child.position.x - 0.35f, child.position.y + i);
+                        }
+                        //if distance is the same, 
+                        //pick child w/ largest x pos if right and w/ smallest x pos if !right
+                        else if (hit.distance == distance)
+                        {
+                            if (right && (child.position.x > position.x - 0.35f))
+                                position = new Vector2(child.position.x + 0.35f, child.position.y + i);
+                            else if (!right && (child.position.x < position.x + 0.35f))
+                                position = new Vector2(child.position.x - 0.35f, child.position.y + i);
+                        }
                     }
             }
         }
@@ -500,15 +514,15 @@ public class Group : MonoBehaviour
         if (((averagePosition - sideBlockSize / 2) > (position.y - minY - LEEWAY))
                 && ((averagePosition + sideBlockSize / 2) < (position.y + maxY + LEEWAY)))
         {
-            //if top is above gap but within leeway, adjust y to fit into gap
-            if((averagePosition - sideBlockSize / 2) < (position.y - minY))
-            {
-                transform.position -= new Vector3(0, (averagePosition + sideBlockSize / 2) - (position.y + maxY), 0);
-            }
             //if bottom is below gap but within leeway, adjust y to fit into gap
-            else if((averagePosition + sideBlockSize / 2) > (position.y + maxY))
+            if ((averagePosition - sideBlockSize / 2) < (position.y - minY))
             {
                 transform.position += new Vector3(0, (position.y - minY) - (averagePosition - sideBlockSize / 2), 0);
+            }
+            //if top is above gap but within leeway, adjust y to fit into gap
+            else if ((averagePosition + sideBlockSize / 2) > (position.y + maxY))
+            {
+                transform.position -= new Vector3(0, (averagePosition + sideBlockSize / 2) - (position.y + maxY), 0);
             }
 
             if (right)
