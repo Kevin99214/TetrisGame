@@ -47,7 +47,8 @@ public class MaintainPosition : MonoBehaviour
 
     bool isOutOfWorld()
     {
-        if (transform.position.y <= EDGE_OF_WORLD)
+        //if block is out of bounds of the world
+        if ((transform.position.y <= EDGE_OF_WORLD) || !GameBoard.validPosition(transform.position))
             return true;
         else
             return false;
