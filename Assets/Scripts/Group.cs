@@ -11,7 +11,7 @@ public class Group : MonoBehaviour
     private const int WIDTH = 10;
     //constant move distance
     private Vector3 moveDistance = new Vector3(0.5f, 0, 0);
-    //constant leeway for slaming block
+    //constant leeway for slaming block in open spot
     private const float LEEWAY = 0.25f;
 
     //rigidbody of each group
@@ -55,6 +55,22 @@ public class Group : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //pause button for debugging purposes
+        bool isPaused = false;
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (isPaused)
+            {
+                Time.timeScale = 1;
+                isPaused = false;
+            }
+            else
+            {
+                Time.timeScale = 0;
+                isPaused = true;
+            }
+        }
+
         //speed up downwards when down key is being pressed
         if (Input.GetKey(KeyCode.W))
         {
@@ -171,6 +187,7 @@ public class Group : MonoBehaviour
             //slam piece to position right before next block
             transform.position -= new Vector3(0, distance - 0.025f, 0);
 
+            createNewBlock();
         }
 
         drawGuideline();
@@ -377,46 +394,87 @@ public class Group : MonoBehaviour
 
     void getOpenSpace(bool right)
     {
+        //number of blocks on the side
+        int sideBlockSize = 0;
+        //position of farthest right/left block
+        float xPosition = INITIAL_DISTANCE;
+        //average position of farthest right/left blocks
+        float averageYPosition = 0f;
+
+        foreach (Transform child in transform)
+        {
+            //find how many blocks are on the farthest right/left side
+            if (xPosition == INITIAL_DISTANCE)
+            {
+                xPosition = child.position.x;
+                sideBlockSize = 1;
+                averageYPosition = child.position.y;
+            }
+            else
+            {
+                //if slaming right
+                if (right)
+                {
+                    //new farthest side block found
+                    if (child.position.x > xPosition)
+                    {
+                        xPosition = child.position.x;
+                        sideBlockSize = 1;
+                        averageYPosition = child.position.y;
+                    }
+                    //another block found on the farthest side
+                    else if (child.position.x == xPosition)
+                    {
+                        sideBlockSize++;
+                        averageYPosition += child.position.y;
+                    }
+                }
+                else
+                {
+                    if (child.position.x < xPosition)
+                    {
+                        xPosition = child.position.x;
+                        sideBlockSize = 1;
+                        averageYPosition = child.position.y;
+                    }
+                    else if (child.position.x == xPosition)
+                    {
+                        sideBlockSize++;
+                        averageYPosition += child.position.y;
+                    }
+                }
+            }
+        }
+
+        //get average position
+        averageYPosition = averageYPosition / sideBlockSize;
+
+        //distance block needs to shift over
         float distance = 0f;
         Vector2 position = new Vector2(INITIAL_DISTANCE, INITIAL_DISTANCE);
 
         //find distance to blocks on right or left
-        foreach (Transform child in transform)
+        for (float i = -0.35f * sideBlockSize; i <= 0.35f * sideBlockSize; i += 0.35f)
         {
-            for (float i = -0.35f; i <= 0.35f; i += 0.35f)
-            {
-                if (right)
-                    hit = Physics2D.Raycast(new Vector2(child.position.x + 0.5f, child.position.y + i), Vector2.right);
-                else
-                    hit = Physics2D.Raycast(new Vector2(child.position.x - 0.5f, child.position.y + i), Vector2.left);
+            if (right)
+                hit = Physics2D.Raycast(new Vector2(xPosition + 0.5f, averageYPosition + i), Vector2.right);
+            else
+                hit = Physics2D.Raycast(new Vector2(xPosition - 0.5f, averageYPosition + i), Vector2.left);
 
-                //found child object with lowest distance
-                if (hit.collider != null)
-                    if (hit.rigidbody != rb)
-                    {
-                        //if distance is larger
-                        if ((hit.distance > distance))
-                        {
-                            distance = hit.distance;
-                            //get position of child that had farthest distance
-                            if (right)
-                                position = new Vector2(child.position.x + 0.35f, child.position.y + i);
-                            else
-                                position = new Vector2(child.position.x - 0.35f, child.position.y + i);
-                        }
-                        //if distance is the same, 
-                        //pick child w/ largest x pos if right and w/ smallest x pos if !right
-                        else if (hit.distance == distance)
-                        {
-                            if (right && (child.position.x > position.x - 0.35f))
-                                position = new Vector2(child.position.x + 0.35f, child.position.y + i);
-                            else if (!right && (child.position.x < position.x + 0.35f))
-                                position = new Vector2(child.position.x - 0.35f, child.position.y + i);
-                        }
-                    }
-            }
+            //found child object with lowest distance
+            if (hit.collider != null)
+                if ((hit.rigidbody != rb) && (hit.distance > distance))
+                {
+                    distance = hit.distance;
+                    //get position of child that had farthest distance
+                    if (right)
+                        position = new Vector2(xPosition + 0.35f, averageYPosition + i);
+                    else
+                        position = new Vector2(xPosition - 0.35f, averageYPosition + i);
+                }
         }
 
+        //size of opening that block is trying to slam into
         float maxY = 0f;
         float minY = 0f;
         //check if farthest block found
@@ -445,90 +503,38 @@ public class Group : MonoBehaviour
 
         //Debug.Log(openSpaceWidth);
 
-        //number of blocks on the side
-        int sideBlockSize = 0;
-        //position of farthest right/left block
-        float xPosition = INITIAL_DISTANCE;
-        //average position of farthest right/left blocks
-        float averagePosition = 0f;
-
-        foreach (Transform child in transform)
-        {
-            //find how many blocks are on the farthest right/left side
-            if (xPosition == INITIAL_DISTANCE)
-            {
-                xPosition = child.position.x;
-                sideBlockSize = 1;
-                averagePosition = child.position.y;
-            }
-            else
-            {
-                //if slaming right
-                if (right)
-                {
-                    //new farthest side block found
-                    if (child.position.x > xPosition)
-                    {
-                        xPosition = child.position.x;
-                        sideBlockSize = 1;
-                        averagePosition = child.position.y;
-                    }
-                    //another block found on the farthest side
-                    else if (child.position.x == xPosition)
-                    {
-                        sideBlockSize++;
-                        averagePosition += child.position.y;
-                    }
-                }
-                else
-                {
-                    if (child.position.x < xPosition)
-                    {
-                        xPosition = child.position.x;
-                        sideBlockSize = 1;
-                        averagePosition = child.position.y;
-                    }
-                    else if (child.position.x == xPosition)
-                    {
-                        sideBlockSize++;
-                        averagePosition += child.position.y;
-                    }
-                }
-            }
-        }
-
-        //get average position
-        averagePosition = averagePosition / sideBlockSize;
-
         //get distance to shift block towards
         if (right)
-            hit = Physics2D.Raycast(new Vector2(xPosition + 0.5f, averagePosition), Vector2.right);
+            hit = Physics2D.Raycast(new Vector2(xPosition + 0.5f, averageYPosition), Vector2.right);
         else
-            hit = Physics2D.Raycast(new Vector2(xPosition - 0.5f, averagePosition), Vector2.left);
+            hit = Physics2D.Raycast(new Vector2(xPosition - 0.5f, averageYPosition), Vector2.left);
 
         //make sure distance is found
         if (hit.collider != null)
             distance = hit.distance;
 
         //check if the gap is within the leeway for slamming
-        if (((averagePosition - sideBlockSize / 2) > (position.y - minY - LEEWAY))
-                && ((averagePosition + sideBlockSize / 2) < (position.y + maxY + LEEWAY)))
+        if (((averageYPosition - sideBlockSize / 2) > (position.y - minY - LEEWAY))
+                && ((averageYPosition + sideBlockSize / 2) < (position.y + maxY + LEEWAY)))
         {
+            //slam block to the side
+            if (right)
+                transform.position += new Vector3(distance - 0.01f, 0, 0);
+            else
+                transform.position -= new Vector3(distance - 0.01f, 0, 0);
+
             //if bottom is below gap but within leeway, adjust y to fit into gap
-            if ((averagePosition - sideBlockSize / 2) < (position.y - minY))
+            if ((averageYPosition - sideBlockSize / 2) < (position.y - minY))
             {
-                transform.position += new Vector3(0, (position.y - minY) - (averagePosition - sideBlockSize / 2), 0);
+                transform.position += new Vector3(0, (position.y - minY) - (averageYPosition - sideBlockSize / 2), 0);
+                Debug.Log("moved up " + ((position.y - minY) - (averageYPosition - sideBlockSize / 2)));
             }
             //if top is above gap but within leeway, adjust y to fit into gap
-            else if ((averagePosition + sideBlockSize / 2) > (position.y + maxY))
+            else if ((averageYPosition + sideBlockSize / 2) > (position.y + maxY))
             {
-                transform.position -= new Vector3(0, (averagePosition + sideBlockSize / 2) - (position.y + maxY), 0);
+                transform.position -= new Vector3(0, (averageYPosition + sideBlockSize / 2) - (position.y + maxY), 0);
+                Debug.Log("moved down " + ((averageYPosition + sideBlockSize / 2) - (position.y + maxY)));
             }
-
-            if (right)
-                transform.position += new Vector3(distance, 0, 0);
-            else
-                transform.position -= new Vector3(distance, 0, 0);
 
             createNewBlock();
 
@@ -536,11 +542,5 @@ public class Group : MonoBehaviour
         }
 
         //Debug.Log(distance);
-
-        /* *************************************************************************************************** */
-        /* CURRENTLY WORKS UNTIL THIS POINT, SLAMS BLOCK INTO THE CORRECT SIDE */
-        /* NEXT STEP: 1. MAKE SURE TO SHIFT BLOCK INTO RIGHT PLACE, AVOID COLLISION DUE TO LEEWAY */
-        /*            2. FIX BUG WITH SLAMING TOO FAR WHEN SLAM BUTTON CLICKED, DISTANCE IS MUCH LARGER THAN ACTUAL */
-        /* *************************************************************************************************** */
     }
 }
