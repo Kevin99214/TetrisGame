@@ -16,6 +16,7 @@ public class createShape : MonoBehaviour
     private BoxCollider2D[] colliders;
     private Rigidbody2D rb;
     private int prevShape = -1;
+    private bool differentShape = false;
 
 
     // Start is called before the first frame update
@@ -34,11 +35,23 @@ public class createShape : MonoBehaviour
     {
         //create a random number
         int shapeNum = Random.Range(0, NUM_OF_SHAPES);
-        //make sure a different shape is generated everytime
-        while (prevShape == shapeNum)
-            shapeNum = Random.Range(0, NUM_OF_SHAPES);
+
+        //same shape can only be allowed twice in a row
+        //if shape has be used twice in a row, set to true to prevent it from a third time
+        if ((prevShape == shapeNum) && differentShape)
+        {
+            while (prevShape == shapeNum)
+            {
+                shapeNum = Random.Range(0, NUM_OF_SHAPES);
+            }
+            differentShape = false;
+        }
+        else if (prevShape == shapeNum)
+            differentShape = true;
+
         //assign prevShape 
         prevShape = shapeNum;
+
         //get location of where to spawn shape
         float yPos = (GameBoard.Height > 0) ? (STARTING_HEIGHT + GameBoard.Height) : STARTING_HEIGHT;
         //create the shape
