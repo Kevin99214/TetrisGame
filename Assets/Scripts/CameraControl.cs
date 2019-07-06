@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     //constants
-    private Vector3 CAMERA_SPEED = new Vector3(0, 0.05f, 0);
+    private Vector3 CAMERA_SPEED = new Vector3(0, 0.06f, 0);
     //starting height of camera
     private const float CAMERA_START_HEIGHT = -1;
     //height range

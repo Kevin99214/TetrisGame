@@ -5,7 +5,7 @@ using UnityEngine;
 public class MaintainPosition : MonoBehaviour
 {
     //constants
-    private const float EDGE_OF_WORLD = -10.0f;
+    private const float EDGE_OF_WORLD = -15.0f;
 
     // Start is called before the first frame update
     void Start()
