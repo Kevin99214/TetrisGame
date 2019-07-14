@@ -13,6 +13,8 @@ public class Group : MonoBehaviour
     private Vector3 moveDistance = new Vector3(0.5f, 0, 0);
     //constant leeway for slaming block in open spot
     private const float LEEWAY = 0.25f;
+    //buffer distance for moving a block a large distance
+    private const float BUFFER_DIST = 0.01f;
 
     //rigidbody of each group
     private Rigidbody2D rb;
@@ -31,6 +33,9 @@ public class Group : MonoBehaviour
 
     //time variable
     private float time = 0f;
+
+    //pause variable for testing
+    bool isPaused = false;
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +61,6 @@ public class Group : MonoBehaviour
     void Update()
     {
         //pause button for debugging purposes
-        bool isPaused = false;
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (isPaused)
@@ -162,6 +166,7 @@ public class Group : MonoBehaviour
             // if (distance != INITIAL_DISTANCE)
             //     transform.position -= new Vector3(distance - 0.01f, 0, 0);
 
+            //false == left
             getOpenSpace(false);
         }
 
@@ -176,6 +181,7 @@ public class Group : MonoBehaviour
             // if (distance != INITIAL_DISTANCE)
             //     transform.position += new Vector3(distance - 0.01f, 0, 0);
 
+            //true == right
             getOpenSpace(true);
         }
 
@@ -185,7 +191,7 @@ public class Group : MonoBehaviour
             //get distance from current block to blocks below
             float distance = findDistanceToBlock(false /* false = y-axis*/, false /* false = down*/);
             //slam piece to position right before next block
-            transform.position -= new Vector3(0, distance - 0.025f, 0);
+            transform.position -= new Vector3(0, distance - BUFFER_DIST, 0);
 
             createNewBlock();
         }
@@ -467,6 +473,7 @@ public class Group : MonoBehaviour
                 {
                     distance = hit.distance;
                     //get position of child that had farthest distance
+                    //add 0.35f to allow for accurate measurement of gap
                     if (right)
                         position = new Vector2(xPosition + 0.35f, averageYPosition + i);
                     else
@@ -475,8 +482,8 @@ public class Group : MonoBehaviour
         }
 
         //size of opening that block is trying to slam into
-        float maxY = 0f;
-        float minY = 0f;
+        float maxY = INITIAL_DISTANCE;
+        float minY = INITIAL_DISTANCE;
         //check if farthest block found
         if (distance != 0f)
         {
@@ -504,6 +511,7 @@ public class Group : MonoBehaviour
         //Debug.Log(openSpaceWidth);
 
         //get distance to shift block towards
+        //add 0.5f to move ray from centre of block to outside edge
         if (right)
             hit = Physics2D.Raycast(new Vector2(xPosition + 0.5f, averageYPosition), Vector2.right);
         else
@@ -515,13 +523,14 @@ public class Group : MonoBehaviour
 
         //check if the gap is within the leeway for slamming
         if (((averageYPosition - sideBlockSize / 2) > (position.y - minY - LEEWAY))
-                && ((averageYPosition + sideBlockSize / 2) < (position.y + maxY + LEEWAY)))
+                && ((averageYPosition + sideBlockSize / 2) < (position.y + maxY + LEEWAY))
+                && (transform.position.y <= GameBoard.Height))
         {
             //slam block to the side
             if (right)
-                transform.position += new Vector3(distance - 0.01f, 0, 0);
+                transform.position += new Vector3(distance - BUFFER_DIST, 0, 0);
             else
-                transform.position -= new Vector3(distance - 0.01f, 0, 0);
+                transform.position -= new Vector3(distance - BUFFER_DIST, 0, 0);
 
             //if bottom is below gap but within leeway, adjust y to fit into gap
             if ((averageYPosition - sideBlockSize / 2) < (position.y - minY))
@@ -540,7 +549,5 @@ public class Group : MonoBehaviour
 
             Debug.Log(distance);
         }
-
-        //Debug.Log(distance);
     }
 }
