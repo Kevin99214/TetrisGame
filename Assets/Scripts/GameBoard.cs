@@ -13,6 +13,7 @@ public class GameBoard
     private const int NUM_BLOCKS = 4;
     private const int START_GUIDE_POS = -50;
     private const float MOVE_TIME = 0.11f;
+    private const float BASE_CAMERA_SIZE = 10f;
     private static Texture2D texture;
 
     //accessors and mutators
@@ -63,6 +64,16 @@ public class GameBoard
         get { return MOVE_TIME; }
     }
 
+    public static float boardSize
+    {
+        get { return gameBoardSize; }
+    }
+
+    public static float cameraSize
+    {
+        get { return BASE_CAMERA_SIZE; }
+    }
+
     public static ref Texture2D Texture
     {
         get
@@ -93,7 +104,7 @@ public class GameBoard
         //make sure shape does not try to move out of bounds
         //round to one decimal place
         float roundedX = GameBoard.round(position.x, 0.1f);
-        if ((roundedX >= -1 * gameBoardSize) && (roundedX <= gameBoardSize))
+        if ((roundedX >= -1 * GameBoard.boardSize) && (roundedX <= GameBoard.boardSize))
         {
             return true;
         }
