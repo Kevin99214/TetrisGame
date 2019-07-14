@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     //constants
-    private Vector3 CAMERA_SPEED = new Vector3(0, 0.06f, 0);
+    private Vector3 CAMERA_SPEED = new Vector3(0, 0.075f, 0);
     //starting height of camera
     private const float CAMERA_START_HEIGHT = -1;
     //height range
@@ -29,7 +29,7 @@ public class CameraControl : MonoBehaviour
     void Update()
     {
         //create ray to find tallest point
-        hit = Physics2D.Raycast(new Vector2(-5, GameBoard.Height), Vector2.right);
+        hit = Physics2D.Raycast(new Vector2(-20, GameBoard.Height), Vector2.right);
 
         //if collider hit
         if (hit.collider != null)
