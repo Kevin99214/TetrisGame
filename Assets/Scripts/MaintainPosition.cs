@@ -16,6 +16,12 @@ public class MaintainPosition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //expand camera if pieces fall out of camera view, zoom out
+        //make sure to expand camera when towers fall
+        if (Mathf.Abs(transform.position.x) > GameBoard.boardSize)
+        {
+            Camera.main.orthographicSize = GameBoard.cameraSize + Mathf.Abs(transform.position.x) / GameBoard.boardSize;
+        }
         //if shape falls out of the world, create new shape is necessary and destroy object
         if (isOutOfWorld())
         {
@@ -34,7 +40,8 @@ public class MaintainPosition : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        //roundPosition(0.01f);
+        //round to 3 decimal places
+        roundPosition(0.001f);
     }
 
     void roundPosition(float factor)
