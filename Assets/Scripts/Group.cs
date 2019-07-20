@@ -86,7 +86,7 @@ public class Group : MonoBehaviour
         }
 
         //rotate clockwise
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             transform.Rotate(0, 0, -ROTATE_ANGLE);
 
@@ -394,8 +394,10 @@ public class Group : MonoBehaviour
         //set position of guideline
         FindObjectOfType<Warehouse>().getGuideline().transform.position =
             new Vector3(transform.position.x, Camera.main.transform.position.y, 0);
+        //set length of guideline to fit camera size
+        float length = Camera.main.orthographicSize / GameBoard.cameraSize;
         //set width to cover entire shape
-        FindObjectOfType<Warehouse>().getGuideline().transform.localScale = new Vector3(maxX - minX + 1, 1, 1);
+        FindObjectOfType<Warehouse>().getGuideline().transform.localScale = new Vector3(maxX - minX + 1, length, 1);
     }
 
     void getOpenSpace(bool right)
@@ -536,18 +538,18 @@ public class Group : MonoBehaviour
             if ((averageYPosition - sideBlockSize / 2) < (position.y - minY))
             {
                 transform.position += new Vector3(0, (position.y - minY) - (averageYPosition - sideBlockSize / 2), 0);
-                Debug.Log("moved up " + ((position.y - minY) - (averageYPosition - sideBlockSize / 2)));
+                //Debug.Log("moved up " + ((position.y - minY) - (averageYPosition - sideBlockSize / 2)));
             }
             //if top is above gap but within leeway, adjust y to fit into gap
             else if ((averageYPosition + sideBlockSize / 2) > (position.y + maxY))
             {
                 transform.position -= new Vector3(0, (averageYPosition + sideBlockSize / 2) - (position.y + maxY), 0);
-                Debug.Log("moved down " + ((averageYPosition + sideBlockSize / 2) - (position.y + maxY)));
+                //Debug.Log("moved down " + ((averageYPosition + sideBlockSize / 2) - (position.y + maxY)));
             }
 
             createNewBlock();
 
-            Debug.Log(distance);
+            //Debug.Log(distance);
         }
     }
 }
