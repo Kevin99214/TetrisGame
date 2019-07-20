@@ -5,15 +5,17 @@ using UnityEngine;
 public class GameBoard
 {
     //variables used in all game objects
-    private const float gameBoardSize = 10.0f;
-    private static float currentHeight = 0.0f;
-    public static ContactPoint2D[] contacts = new ContactPoint2D[10];
+    private const float gameBoardSize = 12.0f;
     private const float STARTING_SPEED = 1.5f;
     private const int INCREASED_SPEED = 15;
     private const int NUM_BLOCKS = 4;
     private const int START_GUIDE_POS = -50;
-    private const float MOVE_TIME = 0.11f;
+    private const float MOVE_TIME = 0.10f;
     private const float BASE_CAMERA_SIZE = 10f;
+    private static float currentHeight = -10f;
+    private static float tempHeight = currentHeight;
+    public static ContactPoint2D[] contacts = new ContactPoint2D[10];
+    public static float currentWidth = gameBoardSize;
     private static Texture2D texture;
 
     //accessors and mutators
@@ -26,6 +28,32 @@ public class GameBoard
         set
         {
             GameBoard.currentHeight = value;
+        }
+
+    }
+
+    public static float TempHeight
+    {
+        get
+        {
+            return GameBoard.tempHeight;
+        }
+        set
+        {
+            GameBoard.tempHeight = value;
+        }
+
+    }
+
+    public static float Width
+    {
+        get
+        {
+            return GameBoard.currentWidth;
+        }
+        set
+        {
+            GameBoard.currentWidth = value;
         }
 
     }
