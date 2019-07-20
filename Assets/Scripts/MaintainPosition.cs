@@ -18,9 +18,10 @@ public class MaintainPosition : MonoBehaviour
     {
         //expand camera if pieces fall out of camera view, zoom out
         //make sure to expand camera when towers fall
-        if (Mathf.Abs(transform.position.x) > GameBoard.boardSize)
+        if (Mathf.Abs(transform.position.x) > GameBoard.Width)
         {
-            Camera.main.orthographicSize = GameBoard.cameraSize + Mathf.Abs(transform.position.x) / GameBoard.boardSize;
+            //piece has exceed board size, update size
+            GameBoard.Width = Mathf.Abs(transform.position.x);
         }
         //if shape falls out of the world, create new shape is necessary and destroy object
         if (isOutOfWorld())
@@ -28,6 +29,14 @@ public class MaintainPosition : MonoBehaviour
             if (gameObject.GetComponent<Group>().enabled)
                 FindObjectOfType<createShape>().createNewObject();
             Destroy(gameObject);
+        }
+
+        if (!GetComponent<Group>().enabled)
+        {
+            if ((transform.position.y + 2) > GameBoard.TempHeight)
+            {
+                GameBoard.TempHeight = transform.position.y + 2;
+            }
         }
     }
 
