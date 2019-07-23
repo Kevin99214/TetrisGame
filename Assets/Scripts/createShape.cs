@@ -5,7 +5,7 @@ using UnityEngine;
 public class createShape : MonoBehaviour
 {
     //constants
-    private const float STARTING_HEIGHT = 10.0f;
+    private float STARTING_HEIGHT;
     private const int NUM_OF_SHAPES = 7;
 
     //public variables
@@ -22,6 +22,8 @@ public class createShape : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //get the starting height of the camera
+        STARTING_HEIGHT = Camera.main.transform.position.y + Camera.main.orthographicSize;
         createNewObject();
     }
 
