@@ -65,7 +65,7 @@ public class CameraControl : MonoBehaviour
 
         // if block is higher than what camera can see, increase size of camera
         // Debug.Log("Height: " + GameBoard.Height + " Camera: " + (Camera.main.transform.position.y + Camera.main.orthographicSize));
-        if (GameBoard.Height > (Camera.main.transform.position.y + Camera.main.orthographicSize))
+        if (GameBoard.MovingHeight > (Camera.main.transform.position.y + Camera.main.orthographicSize))
         {
             Camera.main.orthographicSize += CAMERA_SPEED.y;
         }
@@ -78,11 +78,14 @@ public class CameraControl : MonoBehaviour
 
     void updateCamera()
     {
+        //check if height of tower has changed
         if (GameBoard.TempHeight != GameBoard.Height)
         {
             GameBoard.Height = GameBoard.TempHeight;
         }
+        //reset temp height 
         GameBoard.TempHeight = -10f;
+
         //keep camera at starting height until blocks reach above 0
         if (GameBoard.Height > (CAMERA_START_HEIGHT))
         {
