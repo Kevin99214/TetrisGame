@@ -14,6 +14,7 @@ public class GameBoard
     private const float BASE_CAMERA_SIZE = 10f;
     private static float currentHeight = -10f;
     private static float tempHeight = currentHeight;
+    private static float movingBlockHeight = currentHeight;
     public static ContactPoint2D[] contacts = new ContactPoint2D[10];
     public static float currentWidth = gameBoardSize;
     private static Texture2D texture;
@@ -41,6 +42,19 @@ public class GameBoard
         set
         {
             GameBoard.tempHeight = value;
+        }
+
+    }
+
+    public static float MovingHeight
+    {
+        get
+        {
+            return GameBoard.movingBlockHeight;
+        }
+        set
+        {
+            GameBoard.movingBlockHeight = value;
         }
 
     }

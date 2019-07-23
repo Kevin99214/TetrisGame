@@ -31,12 +31,17 @@ public class MaintainPosition : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //+2 is added to estimate position of top of shape 
         if (!GetComponent<Group>().enabled)
         {
             if ((transform.position.y + 2) > GameBoard.TempHeight)
             {
                 GameBoard.TempHeight = transform.position.y + 2;
             }
+        }
+        else
+        {
+            GameBoard.MovingHeight = transform.position.y;
         }
     }
 
