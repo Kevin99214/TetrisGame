@@ -65,7 +65,8 @@ public class CameraControl : MonoBehaviour
 
         // if block is higher than what camera can see, increase size of camera
         // Debug.Log("Height: " + GameBoard.Height + " Camera: " + (Camera.main.transform.position.y + Camera.main.orthographicSize));
-        if (GameBoard.MovingHeight > (Camera.main.transform.position.y + Camera.main.orthographicSize))
+        if (GameBoard.MovingHeight > (Camera.main.transform.position.y + Camera.main.orthographicSize)
+                && (Camera.main.orthographicSize < GameBoard.MaxCameraSize))
         {
             Camera.main.orthographicSize += CAMERA_SPEED.y;
         }
