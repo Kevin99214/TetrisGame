@@ -55,7 +55,7 @@ public class createShape : MonoBehaviour
         prevShape = shapeNum;
 
         //get location of where to spawn shape
-        float yPos = (GameBoard.Height > 0) ? (STARTING_HEIGHT + GameBoard.Height) : STARTING_HEIGHT;
+        float yPos = (GameBoard.Height > 0) ? (Camera.main.orthographicSize + GameBoard.Height - 0.5f) : STARTING_HEIGHT;
         //create the shape
         shape = Instantiate(shapePrefabs[shapeNum],
                             new Vector3(0, yPos, 0),
