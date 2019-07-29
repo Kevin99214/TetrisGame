@@ -43,6 +43,10 @@ public class MaintainPosition : MonoBehaviour
         {
             GameBoard.MovingHeight = transform.position.y;
         }
+
+        //change friction coefficient if toggled
+        PhysicsMaterial2D material2D = gameObject.GetComponent<Rigidbody2D>().sharedMaterial;
+        gameObject.GetComponent<Rigidbody2D>().sharedMaterial = material2D;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
