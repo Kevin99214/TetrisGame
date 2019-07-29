@@ -12,12 +12,18 @@ public class GameBoard
     private const int START_GUIDE_POS = -50;
     private const float MOVE_TIME = 0.10f;
     private const float BASE_CAMERA_SIZE = 10f;
+    private const float MAX_CAMERA_SIZE = 25f;
+
     private static float currentHeight = -10f;
     private static float tempHeight = currentHeight;
     private static float movingBlockHeight = currentHeight;
     public static ContactPoint2D[] contacts = new ContactPoint2D[10];
     public static float currentWidth = gameBoardSize;
     private static Texture2D texture;
+    private static bool icy = false;
+    private static bool windy = false;
+    private static bool shaky = false;
+    private static bool rainy = false;
 
     //accessors and mutators
     public static float Height
@@ -31,6 +37,62 @@ public class GameBoard
             GameBoard.currentHeight = value;
         }
 
+    }
+
+    public static float MaxCameraSize
+    {
+        get
+        {
+            return GameBoard.MAX_CAMERA_SIZE;
+        }
+    }
+
+    public static bool Icy
+    {
+        get
+        {
+            return GameBoard.icy;
+        }
+        set
+        {
+            GameBoard.icy = value;
+        }
+    }
+
+    public static bool Windy
+    {
+        get
+        {
+            return GameBoard.windy;
+        }
+        set
+        {
+            GameBoard.windy = value;
+        }
+    }
+
+    public static bool Shaky
+    {
+        get
+        {
+            return GameBoard.shaky;
+        }
+        set
+        {
+            GameBoard.shaky = value;
+        }
+    }
+
+    public static bool Rainy
+    {
+        get
+        {
+            return GameBoard.rainy;
+        }
+        set
+        {
+            GameBoard.rainy = value;
+        }
     }
 
     public static float TempHeight
