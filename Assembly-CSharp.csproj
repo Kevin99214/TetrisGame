@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\GameBoard.cs" />
      <Compile Include="Assets\Scripts\Group.cs" />
      <Compile Include="Assets\Scripts\MaintainPosition.cs" />
+     <Compile Include="Assets\Scripts\ToggleEffects.cs" />
      <Compile Include="Assets\Scripts\Warehouse.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/Kevin/Desktop/ruby/Tetris/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
