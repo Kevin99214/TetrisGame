@@ -820,6 +820,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guideline: {fileID: 4594792711891952922, guid: 1399a8ea1b613d946a165bd9ed8e8fbb,
     type: 3}
+  shapeMaterial: {fileID: 6200000, guid: 892bf48752da7d74c8fb2c31ae207bcd, type: 2}
+  icyMaterial: {fileID: 6200000, guid: 9de521c4ff1956e41ac74c2f9b2788b6, type: 2}
 --- !u!4 &835846110
 Transform:
   m_ObjectHideFlags: 0
