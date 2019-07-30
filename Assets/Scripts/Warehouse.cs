@@ -5,6 +5,8 @@ using UnityEngine;
 public class Warehouse : MonoBehaviour
 {
     public GameObject guideline;
+    public PhysicsMaterial2D shapeMaterial;
+    public PhysicsMaterial2D icyMaterial;
     void Start()
     {
         //get guidelines for shape
@@ -20,5 +22,15 @@ public class Warehouse : MonoBehaviour
     public ref GameObject getGuideline()
     {
         return ref guideline;
+    }
+
+    public ref PhysicsMaterial2D getShapeMaterial()
+    {
+        return ref shapeMaterial;
+    }
+
+    public ref PhysicsMaterial2D getIcyMaterial()
+    {
+        return ref icyMaterial;
     }
 }

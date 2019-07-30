@@ -34,6 +34,9 @@ public class Group : MonoBehaviour
     //time variable
     private float time = 0f;
 
+    //color of ice
+    private Color iceColor = new Color(126 / 255f, 245 / 255f, 255 / 255f, 255 / 255f);
+
     //pause variable for testing
     bool isPaused = false;
 
@@ -197,6 +200,27 @@ public class Group : MonoBehaviour
         }
 
         drawGuideline();
+
+        SpriteRenderer[] list = gameObject.GetComponentsInChildren<SpriteRenderer>();
+
+        if (GameBoard.Icy)
+        {
+            //shape material and color of shape to icy
+            GetComponent<Rigidbody2D>().sharedMaterial = FindObjectOfType<Warehouse>().getIcyMaterial();
+            for (int i = 0; i < list.Length; i++)
+            {
+                list[i].color = iceColor;
+            }
+        }
+        else
+        {
+            //change material and shape back to normal
+            GetComponent<Rigidbody2D>().sharedMaterial = FindObjectOfType<Warehouse>().getShapeMaterial();
+            for (int i = 0; i < list.Length; i++)
+            {
+                list[i].color = Color.white;
+            }
+        }
     }
 
     // void OnGUI()
