@@ -314,6 +314,9 @@ public class Group : MonoBehaviour
         if (transform.position.y > GameBoard.Height)
             GameBoard.Height = transform.position.y;
 
+        //change layer for wind to affect it
+        gameObject.layer = 1;
+
         //disable script
         enabled = false;
     }
