@@ -9,7 +9,7 @@ public class GameBoard
     private const float STARTING_SPEED = 1.5f;
     private const int INCREASED_SPEED = 15;
     private const int NUM_BLOCKS = 4;
-    private const int START_GUIDE_POS = -50;
+    private const int START_GUIDE_POS = -100;
     private const float MOVE_TIME = 0.10f;
     private const float BASE_CAMERA_SIZE = 10f;
     private const float MAX_CAMERA_SIZE = 25f;
